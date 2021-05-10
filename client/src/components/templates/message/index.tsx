@@ -3,15 +3,22 @@ import { FC } from "react";
 interface IMessage {
   message: Array<string>;
   client?: boolean;
+  time: string;
 }
 
-export const Message: FC<IMessage> = ({ message, client }) => {
+export const Message: FC<IMessage> = ({ message, client, time }) => {
+  const messageTime = time.split("", 5);
   const content = message.map((el, index) => (
     <p
       key={index}
       className={`message__context ${client && "message__context--client"}`}
     >
       {el}
+      <span
+        className={`message__sendTime ${client ? "message__sendTime--left":'message__sendTime--right'}`}
+      >
+        {messageTime}
+      </span>
     </p>
   ));
 

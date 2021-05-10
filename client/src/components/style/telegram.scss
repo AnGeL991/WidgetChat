@@ -1,0 +1,47 @@
+.telegram {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  cursor: pointer;
+  img {
+    width: 80px;
+    height: 80px;
+  }
+  &__circle {
+    position: absolute;
+    top: 15px;
+    left: 8px;
+    display: inline-block;
+    background-color: #e09554;
+    color: white;
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
+    border-radius: 50%;
+    text-align: center;
+    display: none;
+    &--active {
+      display: block;
+    }
+  }
+  &__message {
+    position: absolute;
+    top: -15px;
+    right: 75px;
+    width: 0px;
+    height: 40px;
+    max-height: 40px;
+    line-height: 40px;
+    text-align: center;
+    letter-spacing: 1.3px;
+    border-radius: 10px 10px 0px 10px;
+    box-shadow: (0 0 0 / 16%) 0px 0px 10px;
+    background-color: #e09554;
+    color: white;
+    overflow: hidden;
+    transition: 0.3s 0.5s linear all;
+    &--active {
+      width: 135px;
+    }
+  }
+}

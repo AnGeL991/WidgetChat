@@ -1,15 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent, KeyboardEventHandler } from "react";
 import { socket } from "_socket";
 import { useStateLogic } from "_hooks";
 import { chatAction, IConversation } from "store/chat";
 import { ActionChatInDB } from "./utils";
 
 export const useChatLogic = () => {
-  const today = new Date();
+  const time = new Date()
+    .toTimeString()
+    .replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+
   const { setConversation } = chatAction;
   const [message, setMessage] = useState("");
   const { onSubmit, conversation } = useStateLogic();
+
   const addConversation = (conversation: IConversation[]) =>
     onSubmit(setConversation, [conversation]);
 
@@ -22,7 +26,7 @@ export const useChatLogic = () => {
     const conversation = {
       client: true,
       message: message,
-      time: today.getTime(),
+      time,
     };
 
     if (message) {
@@ -31,14 +35,22 @@ export const useChatLogic = () => {
       addConversation([conversation]);
     }
   };
+  const onKey: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  };
   useEffect(() => {
     if (conversation.length === 0) {
       const conversat = {
         client: false,
         message: "Hello, how can i help you?",
-        time: today.getTime(),
+        time,
+        readed: true,
       };
-      addConversation([conversat]);
+      setTimeout(() => {
+        addConversation([conversat]);
+      }, 400);
     }
   }, [conversation]);
 
@@ -47,7 +59,8 @@ export const useChatLogic = () => {
       const conversation = {
         client: false,
         message: msg,
-        time: today.getTime(),
+        time,
+        readed: false,
       };
       ActionChatInDB(conversation);
       addConversation([conversation]);
@@ -59,5 +72,6 @@ export const useChatLogic = () => {
     sendMessage,
     handleSetMessage,
     addConversation,
+    onKey,
   };
 };

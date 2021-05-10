@@ -1,12 +1,23 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
+import { ScrollToBottom } from "components/common";
 import { Message } from "components/templates";
 import { useStateLogic } from "_hooks";
+
 export const ContentChat: FC = () => {
   const { conversation } = useStateLogic();
-  console.log(conversation);
-  const message = conversation.map((el,index) => (
-    <Message key={index} message={[el.message]} client={el.client} />
-  ));
+
+  const message = useMemo(
+    () =>
+      conversation.map((el, index) => {
+        return (
+          <Message
+            key={index}
+            {...{ message: [el.message], client: el.client, time: el.time }}
+          />
+        );
+      }),
+    [conversation]
+  );
 
   return (
     <div className="widget__body">
@@ -14,6 +25,7 @@ export const ContentChat: FC = () => {
         <span>Today</span>
       </div>
       {message}
+      <ScrollToBottom />
     </div>
   );
 };

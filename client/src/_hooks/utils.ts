@@ -1,9 +1,6 @@
 import { client } from "_api";
-interface IConversation {
-  client: boolean;
-  message: string;
-  time: number;
-}
+import { IConversation } from "store/chat";
+
 export const ActionChatInDB = async (
   conversation: IConversation,
   clientId?: string
