@@ -45,5 +45,15 @@ UserChatSchema.statics.updateChat = async function (id, msg) {
   }
 };
 
+// class JoinedQuery{
+//   getInitialData(){
+//     model.find()
+//     model2.find()
+//     return {
+//       result, result2
+//     }
+//   }
+// }
+
 export const ChatModel = model<IChat, IChatModel>("Chat", UserChatSchema);
 export default ChatModel;

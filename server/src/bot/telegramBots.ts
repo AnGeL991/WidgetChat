@@ -1,22 +1,17 @@
-import TelegramBot from "node-telegram-bot-api";
-import fetch from "node-fetch";
 import { IBot } from "../interfaces";
-import { config } from "../config";
+import botHendler from "../services/bots";
 
 export const Bots = async () => {
-  const settings = await fetch(`${config.url}/api/bot`);
-  const { result } = await settings.json();
+  const services = new botHendler();
+
+  const settings = await services.getSettings();
+  if (!settings) throw new Error("Can't get settings from db");
+
   const bot: IBot[] = new Array();
-  if (!result) throw new Error("can't fetch settings");
-  if (result) {
-    let TELEGRAM_ID = result.telegram_id;
-    for (let i in result.bots) {
-      bot.push({
-        bot: new TelegramBot(result.bots[i], { polling: true }),
-        isBusy: false,
-        clientId: "",
-      });
-    }
-    return { bot, TELEGRAM_ID };
+
+  let TELEGRAM_ID = settings.telegram_id;
+  for (let i in settings.bots) {
+    bot.push(services.createNewBot(settings.bots[i]));
   }
+  return { bot, TELEGRAM_ID };
 };

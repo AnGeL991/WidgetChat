@@ -6,4 +6,5 @@ const router = Router();
 
 router.get("/bot", getSetting);
 router.put("/bot", newSetting);
+
 export = router;

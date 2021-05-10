@@ -14,15 +14,15 @@ const MONGO_OPTIONS = {
 };
 
 const MONGO_USERNAME = process.env.MONGO_USERNAME || "localhost";
-const MONGO_PASSWORD = process.env.MONGO_USERNAME || "27017";
-const MONGO_HOST = process.env.MONGO_URL || `WidgetChat`;
-
+const MONGO_PASSWORD = process.env.MONGO_PASSWORD || "27017";
+const MONGO_DB = process.env.MONGO_DB || "Widget";
+const MONGO_HOST = process.env.MONGO_HOST || "localhost";
 const MONGO = {
   host: MONGO_HOST,
   password: MONGO_PASSWORD,
   username: MONGO_USERNAME,
   options: MONGO_OPTIONS,
-  url: `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}/${MONGO_HOST}`,
+  url: `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@angel.f9tbg.mongodb.net/${MONGO_DB}`,
 };
 const url = process.env.NODE_ENV === "production" ? "" : "http://localhost:80";
 

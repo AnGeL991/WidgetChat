@@ -6,5 +6,4 @@ const router = Router();
 
 router.use(botRoutes);
 router.use(chatRoutes);
-
 export = router;

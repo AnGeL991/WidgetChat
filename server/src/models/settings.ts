@@ -18,8 +18,16 @@ settingsSchema.statics.updateSetting = async function (id, bot) {
     throw new Error(err.message);
   }
 };
+settingsSchema.statics.newSetting = async function () {
+  try {
+    const newSettings = new this();
+    return await newSettings.save();
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
 
 export const SettingsModel = mongoose.model<ISetting, ISettingModel>(
-  "SettingsWidget",
+  "Setting",
   settingsSchema
 );
