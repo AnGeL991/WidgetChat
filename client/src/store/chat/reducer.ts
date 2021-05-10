@@ -1,5 +1,6 @@
 import { Reducer } from "redux";
 import { ChatType, ChatState } from "./types";
+import { ChatReduxProcess } from "./chatLogic";
 
 export const initialState: ChatState = {
   status: "",
@@ -7,21 +8,21 @@ export const initialState: ChatState = {
   conversation: [],
 };
 
-const { SET_CLIENT_ID, SET_STATUS, SET_CONVERSATION } = ChatType;
+const { SET_CLIENT_ID, SET_STATUS, SET_CONVERSATION, SET_READED } = ChatType;
 
 const reducer: Reducer<ChatState> = (state = initialState, action) => {
   switch (action.type) {
     case SET_STATUS: {
-      return { ...state };
+      return ChatReduxProcess.setStatus(state, action);
     }
     case SET_CLIENT_ID: {
-      return { ...state };
+      return ChatReduxProcess.setClientId(state, action);
     }
     case SET_CONVERSATION: {
-      return {
-        ...state,
-        conversation: [...state.conversation, ...action.payload],
-      };
+      return ChatReduxProcess.setConversation(state, action);
+    }
+    case SET_READED: {
+      return ChatReduxProcess.setReaded(state, action);
     }
     default:
       return state;

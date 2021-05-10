@@ -1,6 +1,6 @@
 import { IConversation, ChatType } from "./types";
 
-const { SET_CONVERSATION } = ChatType;
+const { SET_CONVERSATION, SET_READED } = ChatType;
 
 export const selector = (type: any, payload?: any) => ({
   type,
@@ -9,3 +9,4 @@ export const selector = (type: any, payload?: any) => ({
 
 export const setConversation = (conversation: IConversation[]) =>
   selector(SET_CONVERSATION, conversation);
+export const setReadedMessage = () => selector(SET_READED);
