@@ -8,11 +8,17 @@ declare global {
   }
 }
 
-export function configureStore(initialState: ApplicationState) {
+function configureStore(initialState: ApplicationState) {
+  const composeEnhancer: typeof compose =
+    (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const store = createStore(
     createRootReducer(),
     initialState,
-    applyMiddleware(thunk)
+    composeEnhancer(applyMiddleware(thunk))
   );
   return store;
 }
+const initialState: any = {};
+const store = configureStore(initialState);
+
+export default store;
