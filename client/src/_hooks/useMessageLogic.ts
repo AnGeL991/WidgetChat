@@ -11,7 +11,7 @@ export const useMessageLogic = (open: boolean) => {
 
   const messageHendler = (open: boolean, count: number) => {
     if (!open && count !== 0) {
-      setNewMessage((prev) => !prev);
+      setNewMessage(true);
     }
     if (open) {
       setNewMessage(false);

@@ -9,7 +9,9 @@ export const Chat: FC = () => {
   return (
     <>
       <div className={`widget ${open && "widget--active"}`}>
-        <div className="widget__wrapper">
+        <div
+          className={`widget__wrapper ${open && "widget__wrapper--active"} `}
+        >
           <HeaderChat />
           <ContentChat />
           <SendField />
