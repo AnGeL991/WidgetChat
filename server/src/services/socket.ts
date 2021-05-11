@@ -1,9 +1,19 @@
 import { Socket, Server } from "socket.io";
-import { Bots } from "../bot/telegramBots";
-import { IBot } from "../interfaces";
+import * as botProcessor from "../bot";
+import { IBot, ICurrentUser } from "../interfaces";
+const {
+  Bots,
+  joinToRoom,
+  addBotToUser,
+  allBotsInUse,
+  addBotToRoom,
+  sendDiscounectId,
+  startBotsListen,
+} = botProcessor;
 
 let bots: IBot[] = new Array();
 let TELEGRAM_ID = "";
+let socketUsers = new Array();
 
 class SocketHandler {
   io: Server;
@@ -15,34 +25,55 @@ class SocketHandler {
     event: string,
     io: Server,
     socket: Socket,
+    currentUser: ICurrentUser,
     props?: { message: string; id: string }
   ) {
     switch (event) {
+      case "join": {
+        joinToRoom(socketUsers, socket, currentUser);
+        break;
+      }
       case "message": {
         if (props) {
-          allBotsInUse(io, props.id);
-          addBotToUser(props.message, props.id);
+          allBotsInUse(io, currentUser, bots);
+          addBotToUser(props.message, currentUser, TELEGRAM_ID, bots);
         }
         break;
       }
       case "disconnect": {
-        sendDiscounectId(socket.id);
+        sendDiscounectId(currentUser, TELEGRAM_ID, bots);
+        break;
+      }
+      default: {
+        return;
       }
     }
   }
 
-  // addToEvenet(event, middleware) {}
-
   init() {
     this.io.on("connection", (socket: Socket) => {
+      let currentUser: ICurrentUser = { name: "", room: "" };
+      socket.on("join", (user: ICurrentUser) => {
+        const { name, room } = user;
+        currentUser = { name, room };
+        this._runAllFunctionsOnEvent("join", this.io, socket, user);
+      });
+
       socket.on("message", (message: string, id: string) => {
-        this._runAllFunctionsOnEvent("message", this.io, socket, {
+        console.log(currentUser, socketUsers);
+        this._runAllFunctionsOnEvent("message", this.io, socket, currentUser, {
           message,
           id,
         });
       });
+
       socket.on("disconnect", () => {
-        this._runAllFunctionsOnEvent("disconnect", this.io, socket);
+        this._runAllFunctionsOnEvent(
+          "disconnect",
+          this.io,
+          socket,
+          currentUser
+        );
       });
     });
   }
@@ -58,55 +89,10 @@ export const startChat = async (io: Server) => {
     }
     if (bots.length > 0) {
       socketHendler.init();
-      startBotsListen(io);
+      addBotToRoom(bots, socketUsers);
+      startBotsListen(io, bots);
     }
   } catch (err) {
     console.log(err.message);
-  }
-};
-
-const allBotsInUse = (io: Server, id: string) => {
-  const freeBots = bots.find((el) => el.isBusy === false);
-  if (!freeBots) {
-    console.log("zajęte", id);
-    io.to(id).emit(
-      "response",
-      "Przepraszamy ale wszyscy pracownicy sa teraz zajęci"
-    );
-  }
-};
-const addBotToUser = (message: string, id: string) => {
-  console.log(message, id);
-  for (let i in bots) {
-    if (!bots[i].isBusy) {
-      bots[i].clientId = id;
-      bots[i].isBusy = true;
-      bots[i].bot.sendMessage(TELEGRAM_ID, message);
-      break;
-    }
-    if (bots[i].isBusy && bots[i].clientId === id) {
-      console.log(id, bots);
-      bots[i].bot.sendMessage(TELEGRAM_ID, message);
-      break;
-    }
-  }
-};
-const sendDiscounectId = (id: string) => {
-  for (let i in bots) {
-    if (bots[i].clientId === id) {
-      bots[i].isBusy = false;
-      bots[i].bot.sendMessage(TELEGRAM_ID, `user ${id} leave from the page`);
-    }
-  }
-};
-
-const startBotsListen = (io: Server) => {
-  for (let i in bots) {
-    bots[i].bot.on("message", (msg) => {
-      if (!msg) return;
-      bots[i].isBusy
-        ? io.to(bots[i].clientId).emit("response", msg.text)
-        : null;
-    });
   }
 };

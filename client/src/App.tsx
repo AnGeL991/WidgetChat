@@ -1,8 +1,8 @@
-import React from "react";
+import React, { FC } from "react";
 import { Chat } from "components/templates";
 
-function App() {
+const App: FC = () => {
   return <Chat />;
-}
+};
 
 export default App;

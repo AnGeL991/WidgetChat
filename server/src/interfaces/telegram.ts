@@ -4,4 +4,9 @@ export interface IBot {
   bot: TelegramBot;
   isBusy: boolean;
   clientId: string;
+  room: string;
+}
+export interface ICurrentUser {
+  name: string;
+  room: string;
 }

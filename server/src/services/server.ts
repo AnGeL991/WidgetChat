@@ -10,7 +10,7 @@ import router from "../routes";
 class server {
   static config(app: any) {
     connectToDb();
-    app.use(express.static(path.join("../../client/build")));
+    app.use(express.static(path.join("../client/build")));
     app.use(express.urlencoded({ extended: false }));
     app.use(express.json());
     app.use(cors());

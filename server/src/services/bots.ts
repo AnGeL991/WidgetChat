@@ -15,6 +15,7 @@ class botHendler {
       bot: new TelegramBot(bot, { polling: true }),
       isBusy: false,
       clientId: "",
+      room: "",
     };
   }
 }
