@@ -9,4 +9,5 @@ export interface IBot {
 export interface ICurrentUser {
   name: string;
   room: string;
+  inChat?: boolean;
 }

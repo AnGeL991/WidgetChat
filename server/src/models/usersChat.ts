@@ -7,14 +7,14 @@ const UserChatSchema = new Schema({
     {
       client: { type: Boolean },
       message: { type: String },
-      time: { type: Number },
+      time: { type: String },
     },
   ],
 });
 
 UserChatSchema.statics.addNewChat = async function (props) {
   try {
-    const newChat = new this({ conversation: [props.conversation] });
+    const newChat = new this(props);
     return await newChat.save();
   } catch (err) {
     throw new Error(err.message);
@@ -44,16 +44,6 @@ UserChatSchema.statics.updateChat = async function (id, msg) {
     throw new Error(err.message);
   }
 };
-
-// class JoinedQuery{
-//   getInitialData(){
-//     model.find()
-//     model2.find()
-//     return {
-//       result, result2
-//     }
-//   }
-// }
 
 export const ChatModel = model<IChat, IChatModel>("Chat", UserChatSchema);
 export default ChatModel;

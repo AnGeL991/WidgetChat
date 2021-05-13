@@ -32,11 +32,12 @@ export const joinToRoom = (
 
 export const addBotToRoom = (
   bots: IBot[],
-  socketUsers: Array<{ name: string; room: string }>
+  socketUsers: Array<ICurrentUser>
 ) => {
   for (let i in bots) {
     bots[i].bot.onText(/\/chats/, (msg, match) => {
       const chatId = msg.chat.id;
+      const pendingUsers = socketUsers.filter((el) => !el.inChat);
       const keyboard = socketUsers.map((el) => [
         { text: "/sendTo " + el.name },
       ]);
@@ -48,6 +49,11 @@ export const addBotToRoom = (
       });
     });
     bots[i].bot.onText(/\/sendTo (.+)/, (msg, match) => {
+      const prevUser = socketUsers.map((el) => {
+        el.name === bots[i].clientId ? (el.inChat = false) : el;
+        return el;
+      });
+      socketUsers = [...prevUser];
       const chatId = msg.chat.id;
       if (match) {
         const chat = socketUsers.find((el) => el.name === match[1]);
@@ -64,14 +70,14 @@ export const addBotToRoom = (
         }
       }
     });
-    break;
   }
 };
 
 export const allBotsInUse = (
   io: Server,
   currentUser: ICurrentUser,
-  bots: IBot[]
+  bots: IBot[],
+  socketUsers: ICurrentUser[]
 ) => {
   const freeBots = bots.find((el) => el.isBusy === false);
   if (!freeBots) {
@@ -84,16 +90,26 @@ export const allBotsInUse = (
 export const addBotToUser = (
   message: string,
   currentUser: ICurrentUser,
+  socketUsers: ICurrentUser[],
   telegram_id: string,
   bots: IBot[]
 ) => {
   for (let i in bots) {
     if (bots[i].room === currentUser.room) {
-      bots[i].bot.on;
+      const inChat = socketUsers.map((el) => {
+        el.name === currentUser.name ? (el.inChat = true) : el;
+        return el;
+      });
+      socketUsers = [...inChat];
       prepareBot(bots[i], telegram_id, message, true, currentUser);
       break;
     }
     if (!bots[i].isBusy) {
+      const inChat = socketUsers.map((el) => {
+        el.name === currentUser.name ? (el.inChat = true) : el;
+        return el;
+      });
+      socketUsers = [...inChat];
       prepareBot(bots[i], telegram_id, message, true, currentUser);
       break;
     } else if (bots[i].isBusy && bots[i].clientId === currentUser.name) {
@@ -114,10 +130,7 @@ const prepareBot = (
     bots.clientId = currentUser.name;
     bots.room = currentUser.room;
   }
-  if (busy) {
-    bots.isBusy = true;
-  }
-
+  bots.isBusy = busy ? true : false;
   bots.bot.sendMessage(telegram_id, message);
 };
 
@@ -132,7 +145,8 @@ export const sendDiscounectId = (
         bots[i],
         telegram_id,
         `user ${currentUser.name} leave from the page`,
-        false
+        false,
+        { name: "", room: "" }
       );
     }
   }

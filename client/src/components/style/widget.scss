@@ -1,8 +1,8 @@
 .widget {
   padding: 0px 5px;
-  height: 400px;
-  position: absolute;
-  bottom: 80px;
+  height: 450px;
+  position: fixed;
+  bottom: 0;
   right: 0;
   overflow: hidden;
   &__wrapper {
@@ -16,8 +16,8 @@
     justify-content: space-between;
     background-color: white;
     transition: 0.3s linear all;
-    opacity: 0;
-    transform: translateY(20px);
+    opacity: 1;
+    transform: translateY(0px);
     &--active {
       opacity: 1;
       transform: translateY(0px);

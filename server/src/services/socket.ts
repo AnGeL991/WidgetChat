@@ -12,8 +12,8 @@ const {
 } = botProcessor;
 
 let bots: IBot[] = new Array();
+let socketUsers: Array<ICurrentUser> = new Array();
 let TELEGRAM_ID = "";
-let socketUsers = new Array();
 
 class SocketHandler {
   io: Server;
@@ -26,6 +26,7 @@ class SocketHandler {
     io: Server,
     socket: Socket,
     currentUser: ICurrentUser,
+
     props?: { message: string; id: string }
   ) {
     switch (event) {
@@ -35,8 +36,14 @@ class SocketHandler {
       }
       case "message": {
         if (props) {
-          allBotsInUse(io, currentUser, bots);
-          addBotToUser(props.message, currentUser, TELEGRAM_ID, bots);
+          allBotsInUse(io, currentUser, bots, socketUsers);
+          addBotToUser(
+            props.message,
+            currentUser,
+            socketUsers,
+            TELEGRAM_ID,
+            bots
+          );
         }
         break;
       }
@@ -60,7 +67,6 @@ class SocketHandler {
       });
 
       socket.on("message", (message: string, id: string) => {
-        console.log(currentUser, socketUsers);
         this._runAllFunctionsOnEvent("message", this.io, socket, currentUser, {
           message,
           id,

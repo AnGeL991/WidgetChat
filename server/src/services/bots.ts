@@ -1,6 +1,5 @@
 import { SettingsModel } from "../models/settings";
 import TelegramBot from "node-telegram-bot-api";
-
 class botHendler {
   async getSettings() {
     try {
