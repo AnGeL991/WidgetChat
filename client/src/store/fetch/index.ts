@@ -4,16 +4,16 @@ import { chatAction } from "store/chat";
 export const initData = () => {
   return async (dispatch: Function) => {
     try {
-      const id = localStorage.getItem("ChatId");
+      const id = localStorage.getItem("chatId");
       if (id) {
+        dispatch(chatAction.request());
         const { result } = await client("chat/conversation", {
           id: JSON.parse(id),
         });
-        console.log(result);
-        dispatch(chatAction.setConversation([...result.conversation]));
+        dispatch(chatAction.success([...result.conversation]));
       }
     } catch (err) {
-      console.log(err.message);
+      dispatch(chatAction.failure(err.message));
     }
   };
 };

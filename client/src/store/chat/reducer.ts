@@ -6,9 +6,19 @@ export const initialState: ChatState = {
   status: "",
   clientId: "",
   conversation: [],
+  loading: false,
+  error: "",
 };
 
-const { SET_CLIENT_ID, SET_STATUS, SET_CONVERSATION, SET_READED } = ChatType;
+const {
+  SET_CLIENT_ID,
+  SET_STATUS,
+  SET_CONVERSATION,
+  SET_READED,
+  LOAD_REQUEST,
+  END_REQUEST,
+  FAILURE_REQUEST,
+} = ChatType;
 
 const reducer: Reducer<ChatState> = (state = initialState, action) => {
   switch (action.type) {
@@ -23,6 +33,15 @@ const reducer: Reducer<ChatState> = (state = initialState, action) => {
     }
     case SET_READED: {
       return ChatReduxProcess.setReaded(state, action);
+    }
+    case LOAD_REQUEST: {
+      return ChatReduxProcess.requestLoading(state, action);
+    }
+    case END_REQUEST: {
+      return ChatReduxProcess.successLoading(state, action);
+    }
+    case FAILURE_REQUEST: {
+      return ChatReduxProcess.failureLoading(state, action);
     }
     default:
       return state;

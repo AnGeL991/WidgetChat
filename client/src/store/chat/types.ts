@@ -6,6 +6,9 @@ export interface IConversation {
 }
 
 export enum ChatType {
+  LOAD_REQUEST = "LOAD_REQUEST",
+  END_REQUEST = "END_REQUEST",
+  FAILURE_REQUEST = "FAILURE_REQUEST",
   SET_STATUS = "SET_STATUS",
   SET_CLIENT_ID = "SET_CLIENT_ID",
   SET_CONVERSATION = "SET_CONVERSATION",
@@ -16,4 +19,6 @@ export interface ChatState {
   status: string;
   clientId: string;
   conversation: IConversation[];
+  loading: boolean;
+  error: string;
 }

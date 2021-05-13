@@ -7,7 +7,9 @@ export const useStateLogic = () => {
   const onSubmit = (action: any, props: any) => {
     dispatch(action(...props));
   };
-  const { conversation } = useSelector((state: ApplicationState) => state.chat);
+  const { conversation, loading } = useSelector(
+    (state: ApplicationState) => state.chat
+  );
 
-  return { onSubmit, conversation };
+  return { onSubmit, conversation, loading };
 };

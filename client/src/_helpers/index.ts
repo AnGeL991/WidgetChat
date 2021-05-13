@@ -13,12 +13,12 @@ export const prepareUser = () => {
     separator: "-",
     length: 2,
   };
-  const userDetails = localStorage.getItem("User");
+  const userDetails = localStorage.getItem("ChatUser");
 
   if (!userDetails) {
     const room = uuidv4();
     const name: string = uniqueNamesGenerator(customConfig);
-    localStorage.setItem("User", JSON.stringify({ name, room }));
+    localStorage.setItem("ChatUser", JSON.stringify({ name, room }));
 
     return { name, room };
   }

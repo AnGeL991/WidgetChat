@@ -24,4 +24,13 @@ export class ChatReduxProcess {
       conversation: [...conversation],
     };
   }
+  static requestLoading(state: ChatState, action: AnyAction) {
+    return { ...state, loading: true };
+  }
+  static successLoading(state: ChatState, action: AnyAction) {
+    return { ...state, conversation: [...action.payload] };
+  }
+  static failureLoading(state: ChatState, action: AnyAction) {
+    return { ...state, error: action.payload };
+  }
 }
