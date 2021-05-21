@@ -24,7 +24,8 @@ const MONGO = {
   options: MONGO_OPTIONS,
   url: `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@angel.f9tbg.mongodb.net/${MONGO_DB}`,
 };
-const url = process.env.NODE_ENV === "production" ? "" : "http://localhost:80";
+const url =
+  process.env.NODE_ENV === "production" ? "" : "http://localhost:8080";
 
 const BOT_TOKEN = process.env.bot_token || "bot";
 const BOT = {
